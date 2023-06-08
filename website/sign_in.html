@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Sign-In</title>
+  <link rel="stylesheet" href="sign_in.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@200&display=swap');
+  </style>
+</head>
+
+<body>
+  <!-- <h1 style="text-align:left">LOGIN</h1> -->
+  <div class="center">
+    <h1>Login</h1>
+    <form method="post" id="login-form">
+      <div class="txt_field">
+        <input type="text" name="login-email" id="login-email" required>
+        <span></span>
+        <label>Email</label>
+      </div>
+      <div class="txt_field">
+        <input type="password" name="login-password" id="login-password" required>
+        <span></span>
+        <label>Password</label>
+      </div>
+      <input type="submit" value="Login">
+      <div class="signup_link">
+        Not a member? <a href="sign_up.html">Signup</a>
+      </div>
+    </form>
+  </div>
+
+</body>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+  import { getDatabase, set, ref, update } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCRcDrTF7AXYpbXMB-8CqoZXmN1JwOxgsQ",
+    authDomain: "esw-project-f8cda.firebaseapp.com",
+    databaseURL: "https://esw-project-f8cda-default-rtdb.firebaseio.com",
+    projectId: "esw-project-f8cda",
+    storageBucket: "esw-project-f8cda.appspot.com",
+    messagingSenderId: "525205288190",
+    appId: "1:525205288190:web:083179153c49b01ab421af",
+    measurementId: "G-ZHGB088S8P"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+  const auth = getAuth();
+
+  // login
+  const loginForm = document.querySelector('#login-form');
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // get user info
+    const email = loginForm['login-email'].value;
+    const password = loginForm['login-password'].value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+
+        const dt = new Date();
+        update(ref(database, 'users/' + user.uid), {
+          last_login: dt,
+        })
+
+        sessionStorage.setItem('uid', userCredential.user.uid);
+
+        location.href = "diff_projects.html";
+
+        //close the login modal and reset the form
+        loginForm.reset();
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        alert(errorMessage);
+      });
+
+  });
+
+</script>
+
+</html>

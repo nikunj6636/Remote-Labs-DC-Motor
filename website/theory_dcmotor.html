@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <style>
+    .card {
+      margin: 100px auto 0;
+      width: 80vw;
+      /* height: 100vh; */
+      perspective: 1000px;
+      padding: 0px 0px 30px;
+    }
+
+    .card__inner {
+      width: 100%;
+      height: 100%;
+      /* transition: transform 1s; */
+      position: relative;
+    }
+
+    .card__face--back {
+      background-color: var(--light);
+      transform: rotateY(360deg);
+    }
+
+    .card__body {
+      padding: 30px;
+    }
+
+    card__header {
+      position: relative;
+      padding: 30px 30px 40px;
+    }
+
+    .card__content {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+    }
+
+    .leave {
+      font-family: "Open Sans", sans-serif;
+      font-size: 16px;
+      letter-spacing: 2px;
+      text-decoration: none;
+      text-transform: uppercase;
+      color: red;
+      cursor: pointer;
+      border: 3px solid;
+      padding: 0.25em 0.5em;
+      box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+      position: relative;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    .leave:active {
+      box-shadow: 0px 0px 0px 0px;
+      top: 5px;
+      left: 5px;
+    }
+  </style>
+  <script>
+    function leave_session() {
+      window.open("diff_projects.html", "_self");
+    }
+  </script>
+</head>
+
+<body style="background-color: royalblue;">
+  <h1 style="color:black;display: inline-block;margin-left: 43%;">DC Motor Theory</h1>
+
+  <!-- <style>
+    body {
+      background-image: url('abc');
+    }
+  </style> -->
+  <button onclick=leave_session() class="leave" style="float: right;margin-top: 1%;">BACK TO HOME</button>
+  <br>
+  <!-- <p>
+        hello , write the theory about the experiment here
+    </p> -->
+  <div class="card" id="fl">
+    <div class="card__inner" id="fl_in">
+      <div class="card_face card_face--back">
+        <div class="card__content">
+          <h2 style="font-size: large;color: yellow; text-align: center;">RPM VALUE AGAINST A GIVEN INPUT VOLTAGE IS VISUALIZED AND SHOWN</h2> -->
+          <div class="card__body">
+            <h3 style="color: yellow;">Aim</h3>
+            <p style="color: pink; font-size:larger">To provide Voltage as an Input from a Remote Place(i.e. Send the value from the Website), interpret it,
+              perform all the necessary
+              Mathematical Computations, Calculate the corresponding RPM Value and draw the RPM V/S Voltage Graph for
+              the user.</p><br />
+            <h3 style="color: yellow;">Apparatus</h3>
+            <p>
+            <ol style="color:pink;font-size: larger;">
+              <li>
+                Motor Driver (IC L293D)
+              </li>
+              <li>
+                RPM Sensor (IC HC-020K)
+              </li>
+              <li>
+                9V Battery
+              </li>
+              <li>
+                ESP 32
+              </li>
+              <li>
+                PCBS (2)
+              </li>
+              <li>
+                DC Motor
+              </li>
+              <li>
+                ESP 32 CAM
+              </li>
+            </ol>
+            </p><br />
+            <h3 style="color: yellow;">THEORY</h3>
+            <p style="color:pink ; font-size: larger;">The main fundamentals behind the experiment can be summarized as:</p>
+            <p>
+            <ol style="color: pink; font-size: larger;">
+              <li>
+                The DC motor speed in general is directly proportional to the supply voltage, so if reduce the voltage
+                from 9 volts to 4.5 volts then
+                our speed become half of what it originally had. But in practice, for changing the speed of a dc motor
+                we cannot go on changing the
+                supply voltage all the time. The speed controller PWM for a DC motor works by varying the average
+                voltage supplied to the motor.
+              </li>
+              <li>
+                The L293D IC receives signals from the microprocessor and transmits the relative signal to the motors.
+                It has two voltage pins,one
+                of which is used to draw current for the working of the L293D and the other is used to apply voltage to
+                the motors.
+                It acts as a Current Amplifier and Amplifies the Low Current Signal.
+              </li>
+              <li>
+                Meanwhile, the Speed of the Rotating DC Motor is calculated by the RPM Sensor which Calculates the Speed
+                by noting the number of holes(spokes)
+                it encounters in 1 second. Using this we calculate the pulses per turn and using this value, we can
+                calculate the value of the RPM Sensor.
+              </li>
+              <li>
+                All of this data is sent on ThingSpeak Channel and correspondingly retreived from there on the website
+                with the Graph. The Camera Live Streams the
+                Rotation of the RPM Sensor.
+              </li>
+            </ol>
+            </p>
+            <img src="../images/setup.jpeg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

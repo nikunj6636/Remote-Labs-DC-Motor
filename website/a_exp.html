@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="graph.js"></script>
+    <style>
+        body {
+            padding: auto;
+            color: white;
+            background: royalblue;
+        }
+
+        .chart {
+            margin: 0 auto;
+            width: 100%;
+            max-width: 700px;
+            border-radius: 3px;
+            border-style: double;
+            border-color: yellow;
+            background-color: white;
+            /* float: right; */
+            margin-right: 20px;
+        }
+
+        #demo {
+            overflow: hidden;
+            font-size: 200%;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .timer {
+            margin: 10px 0;
+            text-align: right;
+            float: right;
+        }
+
+        .leave {
+            font-family: "Open Sans", sans-serif;
+            font-size: 16px;
+            letter-spacing: 2px;
+            text-decoration: none;
+            text-transform: uppercase;
+            color: red;
+            cursor: pointer;
+            border: 3px solid;
+            padding: 0.25em 0.5em;
+            box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .leave:active {
+            box-shadow: 0px 0px 0px 0px;
+            top: 5px;
+            left: 5px;
+        }
+
+        @media (min-width: 768px) {
+            .button-54 {
+                padding: 0.25em 0.75em;
+            }
+        }
+
+        .submit {
+            background-color: #fff000;
+            border-radius: 12px;
+            color: #000;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 10px 15px;
+            text-align: center;
+            transition: 200ms;
+            width: 10%;
+            box-sizing: border-box;
+            border: 0;
+            font-size: 16px;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        .submit:not(:disabled):hover,
+        .submit:not(:disabled):focus {
+            outline: 0;
+            background: #f4e603;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, .2), 0 3px 8px 0 rgba(0, 0, 0, .15);
+        }
+
+        .submit:disabled {
+            filter: saturate(0.2) opacity(0.5);
+            -webkit-filter: saturate(0.2) opacity(0.5);
+            cursor: not-allowed;
+        }
+    </style>
+    <script>
+        function leave_session() {
+            sessionStorage.removeItem("saved_countdown");
+            var url = "https://api.thingspeak.com/update?api_key=GZO40J315M8AWC35&field1=-1";
+            var myWindow = window.open(url, "_blank");
+            setTimeout(() => {
+                console.log('hey');
+                myWindow.close();
+                window.open("diff_projects.html", "_self");
+            }, 1000);
+        }
+        function updateTextInput(val) {
+            document.getElementById('voltage_input').value = val;
+        }
+    </script>
+</head>
+
+<body>
+    <h1 style="color: black;display: inline-block;margin-left: 46%;font-size: 2em;">DC Motor</h1>
+
+    <div class="timer">
+        <p style="display: inline;" id="demo"></p>
+        <pre style="display: inline;">  </pre>
+        <button onclick=leave_session() class="leave">LEAVE SESSION</button>
+        <br>
+    </div>
+    <br>
+    <br>
+    <p style="color:black; margin-left: 1%;font-size: xx-large;">STEPS FOR THE EXPERIMENT</p>
+    <br>
+    <ol style="display: inline-block;text-align:left;font-size: large ;width: 50%; color:yellow">
+        <li>Enter the voltage you want to run your dc motor on as an input using the slider button given.Click on submit
+            button
+            to run the dc motor on that value</li>
+        <br>
+        <li>The voltage value will affect the current flowing through the motor and hence rpm of the motor
+            will be affected</li>
+        <br>
+        <li>We can see the variation of the rpm as a plot against the input voltage</li>
+        <br>
+    </ol>
+    <iframe src="http://192.168.60.242" width="700" height="300" style="float: right;">
+        <p>Your browser does not support iframes.</p>
+    </iframe>
+    <form onsubmit="return false" style="margin-left: 20px;">
+        <p style="color: black; font-size: xx-large;">ENTER THE VOLTAGE(in volts between (0 to 9))</p>
+        <input type="range" name="rangeInput" style="color: red" class="slider" min="0" max="9" step="0.1"
+            onchange=updateTextInput(this.value)>
+        <input type="text" id="voltage_input" value=""
+            style="padding:10px;border-radius:10px;display: inline;border: black; color:red">
+        <pre style="display: inline;"> </pre>
+        <button type="submit" onclick=send_input_output() class="submit">SUBMIT</button>
+        <h2 style="color: black;float: right;margin-right: 32%;font-size: xx-large;">Visualizations:</h2>
+    </form>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <label for="rpm" style="font-size: 1.5em; margin-left: 1%;font-size: xx-large;color: black;">RPM:
+        <p id="rpmOutput" style="display: inline;">
+        </p>
+    </label>
+    <div class="chart">
+        <canvas id="myChart" style="width:100%;max-width:700px;"></canvas>
+    </div>
+
+
+    <br>
+    <br>
+    <br>
+
+    <script>
+        // This is the time allowed
+        var time_seconds = 600; // This is time allowed in seconds
+        var saved_countdown = sessionStorage.getItem('saved_countdown');
+
+        if (saved_countdown == null) {
+            // Set the time we're counting down to using the time allowed
+            var new_countdown = new Date().getTime() + (time_seconds + 1) * 1000;
+
+            time = new_countdown;
+            sessionStorage.setItem('saved_countdown', new_countdown);
+        } else {
+            time = saved_countdown;
+        }
+
+        // Update the count down every 1 second
+        var x = setInterval(() => {
+
+            // Get today's date and time
+            var now = new Date().getTime();
+
+            // Find the distance between now and the allowed time
+            var distance = time - now;
+
+            // Time counter
+            var minutes = Math.floor((distance / 60) / 1000);
+            var formattedMinutes = ("0" + minutes).slice(-2);
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            var formattedSeconds = ("0" + seconds).slice(-2);
+
+            // Output the result in an element with id="demo"
+            document.getElementById("demo").innerHTML = formattedMinutes + ":" + formattedSeconds;
+
+            // If the count down is over, write some text 
+            if (distance <= 0) {
+                clearInterval(x);
+                sessionStorage.removeItem("saved_countdown");
+                sessionStorage.removeItem("saved_val_v");
+                sessionStorage.removeItem("saved_val_u");
+                document.getElementById("demo").innerHTML = "Session Ended";
+                fetch("https://blr1.blynk.cloud/external/api/update?token=vPSztEgcvWot4_AHJ0DpBZvLytVKmiLH&v3=0")
+                fetch("https://blr1.blynk.cloud/external/api/update?token=vPSztEgcvWot4_AHJ0DpBZvLytVKmiLH&v2=1")
+                url = "https://api.thingspeak.com/update?api_key=GZO40J315M8AWC35&field1=-1";
+                myWindow = window.open(url, "_blank");
+                setTimeout(() => {
+                    console.log('hey');
+                    myWindow.close();
+                    window.open("diff_projects.html", "_self");
+                }, 1000);
+            }
+        }, 1000);
+
+    </script>
+    <br>
+
+    <br><br>
+</body>
+
+</html>

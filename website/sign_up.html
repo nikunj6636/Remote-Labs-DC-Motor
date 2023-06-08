@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sign-up</title>
+    <link rel="stylesheet" href="sign_in.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@200&display=swap');
+    </style>
+</head>
+
+<body>
+    <div class="center">
+        <h1>Register</h1>
+        <form method="post" id="login-form">
+          <div class="txt_field">
+            <input type="text" name="signup-name" id="signup-name" required>
+            <span></span>
+            <label>Username</label>
+          </div>
+          <div class="txt_field">
+            <input type="text" name="signup-email" id="signup-email" required>
+            <span></span>
+            <label>Email</label>
+          </div>
+          <div class="txt_field">
+            <input type="password" name="signup-password" id="signup-password" required>
+            <span></span>
+            <label>Password</label>
+          </div>
+          <div class="txt_field">
+            <input type="password" name="conf-password" id="confirm-password" required>
+            <span></span>
+            <label>Confirm-Password</label>
+          </div>
+          <input type="submit" value="Register">
+          <div class="signup_link">
+            Not a member? <a href="sign_in.html">Signin</a>
+          </div>
+        </form>
+      </div>
+    
+</body>
+<script type="module">
+
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+    import { getDatabase, set, ref, update } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCRcDrTF7AXYpbXMB-8CqoZXmN1JwOxgsQ",
+        authDomain: "esw-project-f8cda.firebaseapp.com",
+        databaseURL: "https://esw-project-f8cda-default-rtdb.firebaseio.com",
+        projectId: "esw-project-f8cda",
+        storageBucket: "esw-project-f8cda.appspot.com",
+        messagingSenderId: "525205288190",
+        appId: "1:525205288190:web:083179153c49b01ab421af",
+        measurementId: "G-ZHGB088S8P"
+    };
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const auth = getAuth();
+
+    // signup
+    const signupForm = document.querySelector('#login-form');
+    signupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const username = signupForm['signup-name'].value;
+        const email = signupForm['signup-email'].value;
+        const password = signupForm['signup-password'].value;
+
+        console.log(email, password);
+
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((cred) => {
+
+                const user = cred.user;
+
+                set(ref(database, 'users/' + user.uid), {
+                    username: username,
+                    email: email
+                }).then(() => {
+                    location.href = "sign_in.html";
+                })
+            })
+            .catch((err) => {
+                console.log(err.message)
+            })
+    });
+
+</script>
+
+</html>

@@ -1,0 +1,131 @@
+body{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(324deg, #052e6c,#582458);
+    /* background: url("bg_img.png"); */
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: rgb(139, 139, 139);
+    opacity: 1; /* Firefox */
+  }
+  
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container{
+    position: relative;
+    width: 360px;
+    height: 720px;
+    right: 0px;
+    background: #121212;
+    border-radius: 30px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    overflow: hidden;
+    z-index: 2;
+}
+.bg-img{
+    position: relative;
+    top: 60px;
+    width: 140%;
+    height: 360px;
+    background: url("WhatsApp\ Image\ 2022-11-05\ at\ 15.14.22.jpeg") center/cover;
+}
+
+.bg-img .sign{
+    position: relative;
+    right: 200px;
+    top: -70px;
+    font-size: 60px;
+    font-family: "Poppins", sans-serif;
+    color: #fff;
+    transform: rotate(-90deg);
+}
+
+.container::before{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background: linear-gradient(to top,#121212 55%,transparent);
+}
+.content{
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    width: 100%;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    font-family: "Poppins",sans-serif;
+}
+form{
+    width: 300px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+form input, button{
+    border: none;
+    height: 40px;
+    outline: none;
+    border-radius: 2px;
+}
+form input{
+    width: 300px;
+    margin: 5px 0;
+    background: #333333;
+    color: #fff;
+    padding: 0 10px;
+}
+form input::placeholder{
+    font-family: "Poppins",sans-serif;
+}
+form button{
+    background: #2ea54f;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bolder;
+    font-family: "Poppins",sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+form button:hover{
+    background: #37ce62;
+    color: #000000;
+    font-weight: bolder;
+}
+.content p{
+    width: 260px;
+    color: #7e7e7e;
+    font-size: 15px;
+}
+.content p a{
+    text-decoration: none;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+.content p a:hover{
+    color: #2ea54f;
+}
+.words{
+    position: relative;
+    right: 20px;
+    font-family: "Poppins",sans-serif;
+    font-weight: bold;
+    color: #fff;
+    font-size: 10vw;
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+}
